@@ -7,155 +7,204 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
   * { box-sizing: border-box; }
-  body { font-family: Tahoma, Arial, sans-serif; background: #f0f4f8; margin: 0; padding: 20px; direction: rtl; }
+  body { font-family: Tahoma, Arial, sans-serif; background: #f0f4f8; margin: 0; padding: 15px; direction: rtl; color: #222; }
   .container { max-width: 900px; margin: 0 auto; }
-  .card { background: #fff; border-radius: 12px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+  .card { background: #fff; border-radius: 12px; padding: 25px; margin-bottom: 18px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
   h1 { color: #1a237e; font-size: 1.2rem; margin: 0 0 20px; }
-  h2 { color: #1a237e; font-size: 1.05rem; margin: 0 0 15px; }
-  .header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #e8eaf6; }
-  label { display: block; margin-bottom: 6px; color: #555; font-size: 0.9rem; font-weight: bold; }
+  h2 { color: #1a237e; font-size: 1rem; margin: 0 0 15px; }
+  h3 { color: #1a237e; font-size: 0.95rem; margin: 20px 0 10px; }
+
+  /* ─── لوگوها ─── */
+  .top-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+    color: #fff; padding: 15px 20px; border-radius: 12px; margin-bottom: 15px;
+    box-shadow: 0 4px 15px rgba(26,35,126,0.3);
+  }
+  .emblem { display: flex; align-items: center; gap: 8px; }
+  .emblem svg { width: 45px; height: 45px; flex-shrink: 0; }
+  .emblem .emblem-text { font-size: 0.75rem; line-height: 1.4; }
+  .emblem .emblem-text strong { display: block; font-size: 0.85rem; }
+  .center-title { text-align: center; flex: 1; padding: 0 10px; }
+  .center-title h1 { color: #fff; font-size: 0.95rem; margin: 0 0 4px; }
+  .center-title p { color: rgba(255,255,255,0.8); font-size: 0.72rem; margin: 0; }
+
+  /* ─── فرم‌ها ─── */
+  label { display: block; margin-bottom: 6px; color: #555; font-size: 0.88rem; font-weight: bold; }
   input[type=text], input[type=number], input[type=date], textarea {
     width: 100%; padding: 10px 12px; border: 2px solid #e0e0e0; border-radius: 8px;
-    font-family: inherit; font-size: 0.95rem; transition: border-color 0.2s;
+    font-family: inherit; font-size: 0.95rem;
   }
   input:focus, textarea:focus { outline: none; border-color: #1a237e; }
-  textarea { min-height: 240px; resize: vertical; line-height: 1.9; }
-  .form-group { margin-bottom: 15px; }
+  textarea { min-height: 200px; resize: vertical; line-height: 1.9; }
+  .form-group { margin-bottom: 13px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 600px) { .grid2 { grid-template-columns: 1fr; } }
+
+  /* ─── دکمه‌ها ─── */
   .btn {
-    padding: 12px 24px; background: #1a237e; color: #fff; border: none; border-radius: 8px;
-    font-family: inherit; font-size: 0.95rem; cursor: pointer; transition: background 0.2s;
+    padding: 11px 22px; background: #1a237e; color: #fff; border: none; border-radius: 8px;
+    font-family: inherit; font-size: 0.92rem; cursor: pointer; transition: background 0.2s;
   }
   .btn:hover { background: #0d1657; }
+  .btn:disabled { background: #9e9e9e; cursor: not-allowed; }
   .btn-secondary { background: #e0e0e0; color: #333; }
   .btn-secondary:hover { background: #ccc; }
-  .btn-fp { background: #e3f2fd; color: #0d47a1; border: 2px solid #0d47a1; }
+  .btn-fp { background: #e3f2fd; color: #0d47a1; border: 2px solid #0d47a1; width: 100%; margin-top: 8px; }
   .btn-fp.verified { background: #c8e6c9; border-color: #2e7d32; color: #1b5e20; }
+  .btn-camera { background: #fff3e0; color: #e65100; border: 2px solid #e65100; width: 100%; }
   .btn-row { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
-  .hint { background: #e3f2fd; border-right: 4px solid #1a237e; padding: 12px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 15px; line-height: 1.9; }
+
+  /* ─── راهنما ─── */
+  .hint { background: #e3f2fd; border-right: 4px solid #1a237e; padding: 12px; border-radius: 8px; font-size: 0.82rem; margin-bottom: 15px; line-height: 1.9; }
   .hint code { background: #fff; padding: 2px 6px; border-radius: 4px; color: #c62828; font-family: monospace; direction: ltr; display: inline-block; }
-  .contract-view { background: #fafafa; border: 1px solid #eee; border-radius: 10px; padding: 20px; line-height: 2.2; font-size: 0.95rem; white-space: pre-wrap; }
+
+  /* ─── نمایش قرارداد ─── */
+  .contract-view { background: #fafafa; border: 1px solid #eee; border-radius: 10px; padding: 18px; line-height: 2.1; font-size: 0.93rem; white-space: pre-wrap; }
   .ph-filled { background: #fff8e1; color: #e65100; padding: 1px 6px; border-radius: 4px; font-weight: bold; }
-  .ph-empty { background: #ffebee; color: #c62828; padding: 1px 6px; border-radius: 4px; font-size: 0.85rem; }
-  .ph-check { font-size: 1.3rem; vertical-align: middle; }
-  .sig-img { max-height: 70px; max-width: 180px; vertical-align: middle; }
-  .links-box { background: #e8f5e9; border-radius: 10px; padding: 15px; margin-top: 15px; word-break: break-all; display: none; }
+  .ph-empty { background: #ffebee; color: #c62828; padding: 1px 6px; border-radius: 4px; font-size: 0.82rem; }
+  .sig-img { max-height: 55px; max-width: 150px; vertical-align: middle; border: 1px solid #eee; border-radius: 4px; padding: 2px; }
+  .face-img { max-height: 60px; max-width: 60px; vertical-align: middle; border-radius: 50%; border: 2px solid #1a237e; }
+
+  /* ─── لینک‌ها ─── */
+  .links-box { background: #e8f5e9; border-radius: 10px; padding: 15px; margin-top: 15px; display: none; }
   .links-box.show { display: block; }
-  .links-box a { color: #1b5e20; display: block; margin: 6px 0; padding: 8px; background: #fff; border-radius: 6px; text-decoration: none; }
-  .links-box .lbl { font-weight: bold; color: #1b5e20; margin-top: 10px; font-size: 0.9rem; }
-  .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
-  .st-pending { background: #fff3e0; color: #e65100; }
-  .st-partial { background: #e3f2fd; color: #0d47a1; }
-  .st-signed { background: #c8e6c9; color: #1b5e20; }
-  canvas { border: 2px dashed #ccc; border-radius: 8px; width: 100%; height: 150px; touch-action: none; background: #fff; display: block; }
-  .msg { padding: 12px; border-radius: 8px; margin-top: 15px; display: none; }
+  .links-box .lbl { font-weight: bold; color: #1b5e20; margin: 10px 0 5px; font-size: 0.88rem; }
+  .links-box .link-url { background: #fff; padding: 10px; border-radius: 6px; word-break: break-all; font-size: 0.78rem; font-family: monospace; direction: ltr; color: #1a237e; display: block; text-decoration: none; margin-bottom: 6px; border: 1px solid #c8e6c9; }
+  .links-box .copy-btn { font-size: 0.78rem; padding: 6px 12px; background: #4caf50; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
+
+  /* ─── عکس چهره ─── */
+  .face-box { text-align: center; margin-bottom: 10px; }
+  .face-preview { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #1a237e; display: none; margin: 0 auto 10px; }
+  .face-preview.show { display: block; }
+  #faceVideo { width: 100%; max-width: 320px; border-radius: 10px; display: none; margin-bottom: 10px; background: #000; }
+  #faceVideo.show { display: block; }
+
+  /* ─── امضا ─── */
+  canvas.sig-canvas { border: 2px dashed #ccc; border-radius: 8px; width: 100%; height: 150px; touch-action: none; background: #fff; display: block; }
+
+  /* ─── وضعیت ─── */
+  .msg { padding: 12px; border-radius: 8px; margin-top: 12px; display: none; font-size: 0.88rem; }
   .msg.show { display: block; }
   .msg-ok { background: #e8f5e9; color: #1b5e20; }
   .msg-err { background: #ffebee; color: #c62828; }
   .msg-info { background: #e3f2fd; color: #0d47a1; }
-  .party-badge { display: inline-block; background: #1a237e; color: #fff; padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; margin-bottom: 15px; }
-  .demo-badge { background: #fff3e0; color: #e65100; padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; margin-bottom: 15px; text-align: center; }
-  .list-row { padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
-  .list-row a { color: #1a237e; text-decoration: none; font-size: 0.9rem; }
-  .footer { text-align: center; color: #999; font-size: 0.75rem; margin-top: 20px; }
+  .party-badge { display: inline-block; background: #1a237e; color: #fff; padding: 6px 16px; border-radius: 20px; font-size: 0.82rem; margin-bottom: 15px; }
+  .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: bold; }
+  .st-pending { background: #fff3e0; color: #e65100; }
+  .st-partial { background: #e3f2fd; color: #0d47a1; }
+  .st-signed { background: #c8e6c9; color: #1b5e20; }
+
+  /* ─── بخش‌بندی فرم امضا ─── */
+  .section { border-top: 2px dashed #e0e0e0; padding-top: 15px; margin-top: 15px; }
+  .section-title { font-weight: bold; color: #1a237e; margin-bottom: 12px; font-size: 0.92rem; display: flex; align-items: center; gap: 6px; }
+  .check-ok { color: #2e7d32; font-weight: bold; margin-right: 4px; }
+
+  .footer { text-align: center; color: #999; font-size: 0.72rem; margin-top: 20px; padding: 10px; }
 </style>
 </head>
 <body>
 <div id="app"></div>
 <script>
 /* ═══════════════════════════════════════════
-   ۱. تنظیمات
+   ۱. ابزارها
    ═══════════════════════════════════════════ */
-const SUPABASE_URL = '';   // مثلاً 'https://xxxx.supabase.co'
-const SUPABASE_KEY = '';   // anon public key
-const USE_SUPABASE = SUPABASE_URL.startsWith('https://') && SUPABASE_KEY.length > 20;
+function encodeData(obj) {
+  const json = JSON.stringify(obj);
+  const utf8 = unescape(encodeURIComponent(json));
+  return btoa(utf8).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+function decodeData(str) {
+  try {
+    let s = str.replace(/-/g, '+').replace(/_/g, '/');
+    while (s.length % 4) s += '=';
+    return JSON.parse(decodeURIComponent(escape(atob(s))));
+  } catch (e) { return null; }
+}
+function esc(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-let sb = null;
-if (USE_SUPABASE) {
-  const s = document.createElement('script');
-  s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
-  s.onload = () => { sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); };
-  document.head.appendChild(s);
+function compressImage(canvas, maxSide = 260, quality = 0.55) {
+  const ratio = Math.min(maxSide / canvas.width, maxSide / canvas.height, 1);
+  const w = Math.round(canvas.width * ratio);
+  const h = Math.round(canvas.height * ratio);
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  const ctx = c.getContext('2d');
+  ctx.drawImage(canvas, 0, 0, w, h);
+  return c.toDataURL('image/jpeg', quality);
+}
+
+function baseUrl() {
+  return location.origin + location.pathname.replace(/index\.html$/, '').replace(/\/$/, '') + '/';
 }
 
 /* ═══════════════════════════════════════════
-   ۲. لایه ذخیره‌سازی
+   ۲. لوگوها (SVG داخلی، هیچ‌وقت خراب نمی‌شود)
    ═══════════════════════════════════════════ */
-const store = {
-  async create(rec) {
-    if (USE_SUPABASE && sb) {
-      const { data, error } = await sb.from('contracts').insert([rec]).select().single();
-      if (error) throw error; return data;
-    }
-    const id = 'L' + Math.random().toString(36).slice(2, 10);
-    const full = { id, ...rec, created_at: new Date().toISOString() };
-    localStorage.setItem('contract_' + id, JSON.stringify(full));
-    return full;
-  },
-  async get(id) {
-    if (USE_SUPABASE && sb) {
-      const { data, error } = await sb.from('contracts').select('*').eq('id', id).single();
-      if (error) throw error; return data;
-    }
-    const raw = localStorage.getItem('contract_' + id);
-    return raw ? JSON.parse(raw) : null;
-  },
-  async update(id, patch) {
-    if (USE_SUPABASE && sb) {
-      const { error } = await sb.from('contracts').update(patch).eq('id', id);
-      if (error) throw error; return;
-    }
-    const ex = JSON.parse(localStorage.getItem('contract_' + id) || '{}');
-    localStorage.setItem('contract_' + id, JSON.stringify({ ...ex, ...patch }));
-  },
-  async list() {
-    if (USE_SUPABASE && sb) {
-      const { data } = await sb.from('contracts').select('id,status,created_at').order('created_at', { ascending: false }).limit(20);
-      return data || [];
-    }
-    const out = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const k = localStorage.key(i);
-      if (k.startsWith('contract_')) {
-        try { const c = JSON.parse(localStorage.getItem(k)); out.push({ id: c.id, status: c.status, created_at: c.created_at }); } catch (e) {}
-      }
-    }
-    return out.sort((a, b) => (b.created_at || '').localeCompare(a.created_at || ''));
-  }
-};
+const SVG_JUDICIARY = `<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#fff" opacity="0.15"/><circle cx="32" cy="32" r="26" fill="none" stroke="#fff" stroke-width="1.5"/><line x1="32" y1="12" x2="32" y2="50" stroke="#fff" stroke-width="2"/><line x1="14" y1="22" x2="50" y2="22" stroke="#fff" stroke-width="1.5"/><path d="M14,22 L8,34 L20,34 Z" fill="#fff" opacity="0.9"/><path d="M50,22 L44,34 L56,34 Z" fill="#fff" opacity="0.9"/><rect x="26" y="48" width="12" height="4" fill="#fff"/><circle cx="32" cy="12" r="3" fill="#fff"/></svg>`;
+
+const SVG_REGISTRATION = `<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#fff" opacity="0.15"/><circle cx="32" cy="32" r="26" fill="none" stroke="#fff" stroke-width="1.5"/><rect x="16" y="14" width="22" height="30" fill="none" stroke="#fff" stroke-width="1.5" rx="2"/><line x1="20" y1="20" x2="34" y2="20" stroke="#fff" stroke-width="1.2"/><line x1="20" y1="25" x2="34" y2="25" stroke="#fff" stroke-width="1.2"/><line x1="20" y1="30" x2="30" y2="30" stroke="#fff" stroke-width="1.2"/><circle cx="46" cy="44" r="9" fill="#e53935"/><text x="46" y="47.5" text-anchor="middle" font-size="7.5" fill="#fff" font-weight="bold" font-family="Tahoma">ثبت</text></svg>`;
+
+function topBar() {
+  return `
+    <div class="top-bar">
+      <div class="emblem">
+        ${SVG_JUDICIARY}
+        <div class="emblem-text"><strong>قوه قضائیه</strong>جمهوری اسلامی ایران</div>
+      </div>
+      <div class="center-title">
+        <h1>سامانه مدیریت و امضای قرارداد</h1>
+        <p>الکترونیک — امن — بدون سرور</p>
+      </div>
+      <div class="emblem">
+        <div class="emblem-text" style="text-align:left;"><strong>سازمان ثبت</strong>اسناد و املاک کشور</div>
+        ${SVG_REGISTRATION}
+      </div>
+    </div>`;
+}
 
 /* ═══════════════════════════════════════════
-   ۳. نگهدارنده‌ها (Placeholders)
+   ۳. نگهدارنده‌های قالب
    ═══════════════════════════════════════════ */
 const PH_RE = /\{\{([a-zA-Z0-9_]+)(?::([^}|]+))?(?:\|([a-zA-Z]+))?\}\}/g;
 
-function parseFields(template) {
+function parseAdminFields(template) {
   const list = [], seen = new Set();
   let m; PH_RE.lastIndex = 0;
   while ((m = PH_RE.exec(template)) !== null) {
     const [, name, label, type] = m;
     if (seen.has(name)) continue; seen.add(name);
-    if (name === 'a_signature' || name === 'b_signature') continue;
+    if (name.startsWith('a_') || name.startsWith('b_')) continue;
     list.push({ name, label: label || name, type: type || 'text' });
   }
   return list;
 }
-function groupFields(fields) {
-  const g = { admin: [], a: [], b: [] };
-  for (const f of fields) {
-    if (f.name.startsWith('a_')) g.a.push(f);
-    else if (f.name.startsWith('b_')) g.b.push(f);
-    else g.admin.push(f);
-  }
-  return g;
-}
-function esc(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-function renderTemplate(template, values, opts = {}) {
+function renderTemplate(template, adminValues, partyA, partyB) {
   return template.replace(/\{\{([a-zA-Z0-9_]+)(?::([^}|]+))?(?:\|([a-zA-Z]+))?\}\}/g, (full, name, label, type) => {
-    const val = values[name];
-    if (type === 'checkbox') return `<span class="ph-check">${val ? '☑' : '☐'}</span>`;
-    if (name === 'a_signature') return opts.sigA ? `<img src="${opts.sigA}" class="sig-img" alt="امضای الف">` : '<span class="ph-empty">[امضای طرف الف]</span>';
-    if (name === 'b_signature') return opts.sigB ? `<img src="${opts.sigB}" class="sig-img" alt="امضای ب">` : '<span class="ph-empty">[امضای طرف ب]</span>';
+    // فیلدهای طرف الف
+    if (name.startsWith('a_')) {
+      const key = name.slice(2);
+      if (partyA) {
+        if (key === 'signature' && partyA.signature) return `<img src="${partyA.signature}" class="sig-img" alt="امضای الف">`;
+        if (key === 'face' && partyA.facePhoto) return `<img src="${partyA.facePhoto}" class="face-img" alt="چهره الف">`;
+        if (partyA[key]) return `<span class="ph-filled">${esc(partyA[key])}</span>`;
+      }
+      return `<span class="ph-empty">[${esc(label || 'طرف الف')}]</span>`;
+    }
+    // فیلدهای طرف ب
+    if (name.startsWith('b_')) {
+      const key = name.slice(2);
+      if (partyB) {
+        if (key === 'signature' && partyB.signature) return `<img src="${partyB.signature}" class="sig-img" alt="امضای ب">`;
+        if (key === 'face' && partyB.facePhoto) return `<img src="${partyB.facePhoto}" class="face-img" alt="چهره ب">`;
+        if (partyB[key]) return `<span class="ph-filled">${esc(partyB[key])}</span>`;
+      }
+      return `<span class="ph-empty">[${esc(label || 'طرف ب')}]</span>`;
+    }
+    // فیلدهای ثابت مدیر
+    const val = adminValues[name];
+    if (type === 'checkbox') return `<span style="font-size:1.2rem;">${val ? '☑' : '☐'}</span>`;
     return (val !== undefined && val !== null && val !== '')
       ? `<span class="ph-filled">${esc(val)}</span>`
       : `<span class="ph-empty">[${esc(label || name)}]</span>`;
@@ -165,206 +214,290 @@ function renderTemplate(template, values, opts = {}) {
 /* ═══════════════════════════════════════════
    ۴. پنل مدیر
    ═══════════════════════════════════════════ */
-async function renderAdmin() {
-  document.title = 'پنل مدیر - سامانه قرارداد';
+function renderAdmin() {
+  document.title = 'پنل مدیر — سامانه قرارداد';
   document.getElementById('app').innerHTML = `
     <div class="container">
-      ${!USE_SUPABASE ? '<div class="demo-badge">⚠️ حالت آزمایشی: داده‌ها فقط روی همین مرورگر ذخیره می‌شوند. برای ارسال لینک به طرف مقابل، Supabase را در بالای کد وصل کنید.</div>' : ''}
+      ${topBar()}
       <div class="card">
-        <div class="header"><h1>📝 ساخت قرارداد جدید</h1></div>
+        <h2>📝 بخش تعریف قرارداد (پیش‌نویس)</h2>
         <div class="hint">
           <strong>نگهدارنده‌ها:</strong><br>
-          طرف الف: <code>{{a_name}}</code>، <code>{{a_id}}</code><br>
-          طرف ب: <code>{{b_name}}</code>، <code>{{b_id}}</code><br>
-          ثابت (مدیر): <code>{{amount}}</code>، <code>{{duration}}</code><br>
-          نوع: <code>{{amount|number}}</code> — <code>{{date|date}}</code> — <code>{{a_agree|checkbox}}</code><br>
-          امضا: <code>{{a_signature}}</code> و <code>{{b_signature}}</code>
+          فیلدهای خودکار طرفین: <code>{{a_firstName}}</code>، <code>{{a_lastName}}</code>، <code>{{a_nationalId}}</code>، <code>{{a_birthDate}}</code>، <code>{{a_face}}</code>، <code>{{a_signature}}</code><br>
+          و همین موارد برای طرف ب: <code>{{b_firstName}}</code> ... <code>{{b_signature}}</code><br>
+          فیلدهای ثابت (مدیر پر می‌کند): <code>{{amount}}</code>، <code>{{duration}}</code>، <code>{{startDate|date}}</code>
         </div>
         <div class="form-group">
           <label>متن قرارداد</label>
           <textarea id="template"></textarea>
         </div>
-        <div id="fixedFields"></div>
-        <div class="btn-row"><button class="btn" onclick="createContract()">🔗 ساخت قرارداد و لینک‌ها</button></div>
+        <div id="adminFixed"></div>
+        <div class="btn-row">
+          <button class="btn" onclick="createLinks()">🔗 تولید لینک برای طرفین</button>
+        </div>
         <div class="links-box" id="linksBox"></div>
       </div>
-      <div class="card">
-        <h2>📋 قراردادهای اخیر</h2>
-        <div id="contractList">در حال بارگذاری...</div>
-      </div>
-      <div class="footer">سامانه نمونه — برای مقاصد آموزشی</div>
+      <div class="footer">این سامانه کاملاً در مرورگر اجرا می‌شود — داده‌ها در خودِ لینک ذخیره می‌شوند.</div>
     </div>
   `;
 
   const t = document.getElementById('template');
   t.value = `قرارداد صلح
 
-اینجانب {{a_name}} فرزند {{a_father}} به کد ملی {{a_id}} (طرف الف) و اینجانب {{b_name}} فرزند {{b_father}} به کد ملی {{b_id}} (طرف ب) با توافق یکدیگر مقرر نمودیم:
+اینجانب {{a_firstName}} {{a_lastName}} فرزند ........... به کد ملی {{a_nationalId}} و تاریخ تولد {{a_birthDate}} (طرف اول) و اینجانب {{b_firstName}} {{b_lastName}} به کد ملی {{b_nationalId}} و تاریخ تولد {{b_birthDate}} (طرف دوم) با توافق یکدیگر مقرر نمودیم:
 
-طرف الف متعهد می‌شود ماهیانه مبلغ {{amount|number}} تومان به طرف ب پرداخت نماید.
+طرف اول متعهد می‌شود ماهیانه مبلغ {{amount|number}} تومان به طرف دوم پرداخت نماید.
 
 مدت قرارداد: {{duration|number}} ماه از تاریخ {{startDate|date}}.
 
-{{a_agree|checkbox}} طرف الف: کلیه شروط فوق را می‌پذیرم.
-{{b_agree|checkbox}} طرف ب: کلیه شروط فوق را می‌پذیرم.
+این قرارداد در قالب عقد صلح (ماده ۷۵۸ قانون مدنی) منعقد گردیده و هیچ‌یک از آثار ربا یا هبه جایز بر آن مترتب نیست.
 
-امضای طرف الف: {{a_signature}}
-امضای طرف ب: {{b_signature}}`;
+امضای طرف اول: {{a_signature}}
+امضای طرف دوم: {{b_signature}}`;
 
-  t.addEventListener('input', updateFixedFields);
-  updateFixedFields();
-  loadContractList();
+  t.addEventListener('input', updateAdminFixed);
+  updateAdminFixed();
 }
 
-function updateFixedFields() {
-  const fields = parseFields(document.getElementById('template').value);
-  const g = groupFields(fields);
-  const box = document.getElementById('fixedFields');
-  if (!g.admin.length) { box.innerHTML = ''; return; }
-  let html = '<div class="hint" style="background:#fff3e0;border-color:#e65100;"><strong>فیلدهای ثابت (مدیر پر می‌کند):</strong></div>';
-  for (const f of g.admin) {
+function updateAdminFixed() {
+  const fields = parseAdminFields(document.getElementById('template').value);
+  const box = document.getElementById('adminFixed');
+  if (!fields.length) { box.innerHTML = ''; return; }
+  let html = '<div class="hint" style="background:#fff3e0;border-color:#e65100;"><strong>فیلدهای ثابت (مدیر پر می‌کند):</strong></div><div class="grid2">';
+  for (const f of fields) {
     const it = f.type === 'number' ? 'number' : f.type === 'date' ? 'date' : 'text';
-    html += `<div class="form-group"><label>${esc(f.label)}</label><input type="${it}" data-fixed="${f.name}" placeholder="${esc(f.label)}"></div>`;
+    html += `<div class="form-group"><label>${esc(f.label)}</label><input type="${it}" data-admin="${f.name}" placeholder="${esc(f.label)}"></div>`;
   }
+  html += '</div>';
   box.innerHTML = html;
 }
 
-async function createContract() {
+function createLinks() {
   const template = document.getElementById('template').value.trim();
   if (!template) { alert('متن قرارداد خالی است'); return; }
-  const fixed = {};
-  document.querySelectorAll('[data-fixed]').forEach(el => {
-    fixed[el.getAttribute('data-fixed')] = el.type === 'checkbox' ? el.checked : el.value;
+
+  const adminValues = {};
+  document.querySelectorAll('[data-admin]').forEach(el => {
+    adminValues[el.getAttribute('data-admin')] = el.value;
   });
 
-  try {
-    const created = await store.create({
-      template, fixed, status: 'pending', valuesA: {}, valuesB: {}
-    });
+  const contract = {
+    template,
+    adminValues,
+    partyA: null,
+    partyB: null
+  };
 
-    let base = location.origin + location.pathname.replace(/index\.html$/, '');
-    if (!base.endsWith('/')) base += '/';
+  const encoded = encodeData(contract);
+  const base = baseUrl();
 
-    const linkA = `${base}#sign?id=${created.id}&role=a`;
-    const linkB = `${base}#sign?id=${created.id}&role=b`;
-    const linkView = `${base}#view?id=${created.id}`;
+  const linkA = `${base}#sign?role=a&d=${encoded}`;
+  const linkB = `${base}#sign?role=b&d=${encoded}`;
 
-    document.getElementById('linksBox').innerHTML = `
-      <div class="lbl">🔗 لینک امضای طرف الف:</div><a href="${linkA}" target="_blank">${linkA}</a>
-      <div class="lbl">🔗 لینک امضای طرف ب:</div><a href="${linkB}" target="_blank">${linkB}</a>
-      <div class="lbl">👁️ لینک مشاهده و PDF:</div><a href="${linkView}" target="_blank">${linkView}</a>
-    `;
-    document.getElementById('linksBox').classList.add('show');
-    loadContractList();
-  } catch (e) {
-    alert('خطا: ' + e.message);
-  }
+  document.getElementById('linksBox').innerHTML = `
+    <div class="lbl">🔗 لینک امضای طرف اول (${linkA.length.toLocaleString()} کاراکتر):</div>
+    <a class="link-url" href="${linkA}" target="_blank">${linkA}</a>
+    <button class="copy-btn" onclick="copyText('${linkA.replace(/'/g, "\\'")}')">📋 کپی</button>
+
+    <div class="lbl" style="margin-top:15px;">🔗 لینک امضای طرف دوم:</div>
+    <a class="link-url" href="${linkB}" target="_blank">${linkB}</a>
+    <button class="copy-btn" onclick="copyText('${linkB.replace(/'/g, "\\'")}')">📋 کپی</button>
+
+    <p style="margin-top:12px;font-size:0.8rem;color:#555;">
+      ℹ️ این لینک‌ها را برای طرفین بفرستید. هر طرف پس از تکمیل، لینک جدیدی دریافت می‌کند که باید برای طرف دیگر و مدیر ارسال شود.
+    </p>
+  `;
+  document.getElementById('linksBox').classList.add('show');
 }
 
-async function loadContractList() {
-  const box = document.getElementById('contractList');
-  if (!box) return;
-  let list;
-  try { list = await store.list(); } catch (e) { list = []; }
-  if (!list.length) { box.innerHTML = '<p style="color:#999;">هنوز قراردادی ساخته نشده.</p>'; return; }
-  const map = { pending: 'در انتظار', partial: 'نیمه', signed: 'امضا شده' };
-  const cls = { pending: 'st-pending', partial: 'st-partial', signed: 'st-signed' };
-  box.innerHTML = list.map(c => `
-    <div class="list-row">
-      <code style="font-size:0.8rem;">${esc(c.id)}</code>
-      <span class="status-badge ${cls[c.status] || 'st-pending'}">${map[c.status] || c.status}</span>
-      <a href="#view?id=${c.id}">مشاهده ←</a>
-    </div>
-  `).join('');
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(() => alert('لینک کپی شد ✅'))
+    .catch(() => alert('کپی نشد. لطفاً دستی انتخاب کنید.'));
 }
 
 /* ═══════════════════════════════════════════
-   ۵. صفحه امضا
+   ۵. صفحه امضا (طرفین)
    ═══════════════════════════════════════════ */
-async function renderSign(id, role) {
+function renderSign(encoded, role) {
   document.title = 'امضای قرارداد';
-  document.getElementById('app').innerHTML = '<div class="container"><div class="card"><p>در حال بارگذاری...</p></div></div>';
-
-  if (USE_SUPABASE && !sb) await new Promise(r => setTimeout(r, 800));
-
-  let contract = null;
-  try { contract = await store.get(id); } catch (e) {}
-  if (!contract) {
-    document.getElementById('app').innerHTML = '<div class="container"><div class="card"><p style="color:#c62828;">قرارداد یافت نشد. اگر در حالت آزمایشی هستید، لینک فقط روی همان مرورگر کار می‌کند.</p><p><a href="#">بازگشت به پنل</a></p></div></div>';
+  const data = decodeData(encoded);
+  if (!data) {
+    document.getElementById('app').innerHTML = '<div class="container"><div class="card"><p style="color:#c62828;">لینک نامعتبر است.</p></div></div>';
     return;
   }
 
-  const signedKey = role === 'a' ? 'signedAAt' : 'signedBAt';
-  if (contract[signedKey]) {
+  const partyKey = role === 'a' ? 'partyA' : 'partyB';
+  if (data[partyKey] && data[partyKey].signedAt) {
     document.getElementById('app').innerHTML = `
-      <div class="container"><div class="card">
-        <h1>✅ شما قبلاً این قرارداد را امضا کرده‌اید.</h1>
-        <div class="btn-row"><a class="btn" href="#view?id=${id}">مشاهده قرارداد</a></div>
-      </div></div>`;
+      <div class="container">${topBar()}
+        <div class="card"><h1>✅ شما قبلاً این قرارداد را امضا کرده‌اید.</h1>
+        <div class="btn-row"><button class="btn" onclick="showView('${encoded}')">مشاهده قرارداد</button></div>
+        </div></div>`;
     return;
   }
 
-  const fields = parseFields(contract.template);
-  const g = groupFields(fields);
-  const myFields = role === 'a' ? g.a : g.b;
-  const roleLabel = role === 'a' ? 'طرف الف' : 'طرف ب';
-
-  let formHtml = '';
-  for (const f of myFields) {
-    if (f.type === 'checkbox')
-      formHtml += `<div class="form-group"><label style="display:flex;align-items:center;gap:8px;font-weight:normal;cursor:pointer;"><input type="checkbox" data-field="${f.name}"> ${esc(f.label)}</label></div>`;
-    else {
-      const it = f.type === 'number' ? 'number' : f.type === 'date' ? 'date' : 'text';
-      formHtml += `<div class="form-group"><label>${esc(f.label)}</label><input type="${it}" data-field="${f.name}" placeholder="${esc(f.label)}"></div>`;
-    }
-  }
-
-  const combined = { ...(contract.fixed || {}), ...(contract.valuesA || {}), ...(contract.valuesB || {}) };
+  const roleLabel = role === 'a' ? 'طرف اول' : 'طرف دوم';
 
   document.getElementById('app').innerHTML = `
     <div class="container">
+      ${topBar()}
       <div class="card">
-        <div class="header"><h1>✍️ امضای قرارداد</h1></div>
+        <h2>📄 متن قرارداد</h2>
         <div class="party-badge">شما در نقش: ${roleLabel}</div>
         <div class="contract-view" id="contractView"></div>
       </div>
+
       <div class="card">
-        <h2>تکمیل اطلاعات شما</h2>
-        ${formHtml || '<p style="color:#999;">فیلدی برای شما تعریف نشده است.</p>'}
-      </div>
-      <div class="card">
-        <h2>امضا و تأیید</h2>
-        <label style="margin-bottom:8px;">امضای خود را روی کادر بکشید:</label>
-        <canvas id="sigCanvas"></canvas>
-        <div class="btn-row">
-          <button class="btn btn-fp" id="fpBtn" onclick="verifyFingerprint()">🖐️ تأیید اثر انگشت</button>
-          <button class="btn" onclick="submitSignature('${id}', '${role}')">✅ ثبت نهایی امضا</button>
+        <h2>👤 اطلاعات هویتی شما</h2>
+        <div class="grid2">
+          <div class="form-group"><label>نام</label><input type="text" id="firstName" placeholder="نام"></div>
+          <div class="form-group"><label>نام خانوادگی</label><input type="text" id="lastName" placeholder="نام خانوادگی"></div>
+          <div class="form-group"><label>کد ملی</label><input type="text" id="nationalId" placeholder="۱۰ رقم" maxlength="10"></div>
+          <div class="form-group"><label>تاریخ تولد</label><input type="text" id="birthDate" placeholder="۱۳۶۰/۰۱/۰۱"></div>
         </div>
+      </div>
+
+      <div class="card">
+        <h2>📷 اسکن چهره</h2>
+        <div class="face-box">
+          <img id="facePreview" class="face-preview" alt="پیش‌نمایش چهره">
+          <video id="faceVideo" autoplay playsinline></video>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-camera" id="camBtn" onclick="startCamera()">📷 روشن کردن دوربین</button>
+          <button class="btn btn-secondary" id="captureBtn" style="display:none" onclick="captureFace()">📸 گرفتن عکس</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🖐️ تأیید اثر انگشت</h2>
+        <p style="font-size:0.85rem;color:#666;margin:0 0 10px;">برای تأیید هویت، اثر انگشت دستگاه خود را بزنید.</p>
+        <button class="btn btn-fp" id="fpBtn" onclick="verifyFingerprint()">🖐️ تأیید اثر انگشت</button>
+        <div class="msg" id="fpMsg"></div>
+      </div>
+
+      <div class="card">
+        <h2>✍️ امضای الکترونیک</h2>
+        <label>امضای خود را روی کادر بکشید:</label>
+        <canvas class="sig-canvas" id="sigCanvas"></canvas>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="clearSignature()">🗑️ پاک کردن</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <button class="btn" style="width:100%;padding:15px;font-size:1rem;" onclick="submitSignature()">✅ ثبت نهایی امضا و دریافت لینک</button>
         <div class="msg" id="msg"></div>
       </div>
     </div>
   `;
 
-  window._cur = { contract, role, myFields, combined, myValues: {}, fpVerified: false };
+  window._sign = {
+    data, role, roleLabel,
+    facePhoto: null,
+    fpVerified: false,
+  };
+
   renderSignPreview();
   initSigCanvas();
 }
 
 function renderSignPreview() {
-  const { contract, combined, myValues } = window._cur;
+  const { data, role } = window._sign;
+  const combined = { ...(data.adminValues || {}) };
   const view = document.getElementById('contractView');
   if (!view) return;
-  view.innerHTML = renderTemplate(contract.template, { ...combined, ...myValues }, {
-    sigA: contract.sigA, sigB: contract.sigB
-  });
+  view.innerHTML = renderTemplate(
+    data.template,
+    combined,
+    role === 'a' ? { ...(data.partyA || {}), ...(window._sign.facePhoto ? { facePhoto: window._sign.facePhoto } : {}) } : data.partyA,
+    role === 'b' ? { ...(data.partyB || {}), ...(window._sign.facePhoto ? { facePhoto: window._sign.facePhoto } : {}) } : data.partyB
+  );
 }
 
+/* ─── دوربین ─── */
+let videoStream = null;
+
+async function startCamera() {
+  const video = document.getElementById('faceVideo');
+  const camBtn = document.getElementById('camBtn');
+  const captureBtn = document.getElementById('captureBtn');
+  const msg = document.getElementById('msg');
+
+  try {
+    videoStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
+      audio: false
+    });
+    video.srcObject = videoStream;
+    video.classList.add('show');
+    await video.play();
+    camBtn.style.display = 'none';
+    captureBtn.style.display = 'inline-block';
+  } catch (e) {
+    msg.className = 'msg show msg-err';
+    msg.textContent = 'دسترسی به دوربین ممکن نشد. لطفاً مجوز دوربین را صادر کنید.';
+  }
+}
+
+function captureFace() {
+  const video = document.getElementById('faceVideo');
+  const canvas = document.createElement('canvas');
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  canvas.getContext('2d').drawImage(video, 0, 0);
+  const compressed = compressImage(canvas, 260, 0.55);
+  window._sign.facePhoto = compressed;
+
+  document.getElementById('facePreview').src = compressed;
+  document.getElementById('facePreview').classList.add('show');
+  video.classList.remove('show');
+  document.getElementById('captureBtn').style.display = 'none';
+  document.getElementById('camBtn').style.display = 'inline-block';
+  document.getElementById('camBtn').textContent = '🔄 گرفتن مجدد';
+
+  if (videoStream) { videoStream.getTracks().forEach(t => t.stop()); videoStream = null; }
+  renderSignPreview();
+}
+
+/* ─── اثر انگشت ─── */
+async function verifyFingerprint() {
+  const btn = document.getElementById('fpBtn');
+  const msg = document.getElementById('fpMsg');
+  msg.className = 'msg show msg-info';
+  msg.textContent = 'در حال تأیید اثر انگشت...';
+  try {
+    const challenge = new Uint8Array(32);
+    crypto.getRandomValues(challenge);
+    await navigator.credentials.create({
+      publicKey: {
+        challenge,
+        rp: { name: 'Contract Sign' },
+        user: { id: new TextEncoder().encode('s-' + Date.now()), name: 'signer', displayName: 'signer' },
+        pubKeyCredParams: [{ type: 'public-key', alg: -7 }],
+        authenticatorSelection: { authenticatorAttachment: 'platform', userVerification: 'required' },
+        timeout: 60000
+      }
+    });
+    window._sign.fpVerified = true;
+    btn.classList.add('verified');
+    btn.textContent = '✅ اثر انگشت تأیید شد';
+    btn.disabled = true;
+    msg.className = 'msg show msg-ok';
+    msg.textContent = 'اثر انگشت با موفقیت تأیید شد.';
+  } catch (e) {
+    msg.className = 'msg show msg-err';
+    msg.textContent = 'تأیید اثر انگشت انجام نشد. اگر دستگاه اثر انگشت ندارد، از دستگاه دیگری استفاده کنید.';
+  }
+}
+
+/* ─── امضا ─── */
 function initSigCanvas() {
   const canvas = document.getElementById('sigCanvas');
   const ctx = canvas.getContext('2d');
   let drawing = false;
   function resize() {
-    const tmp = canvas.toDataURL();
+    const saved = canvas.toDataURL();
     canvas.width = canvas.offsetWidth;
     canvas.height = canvas.offsetHeight;
     ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.strokeStyle = '#1a237e';
@@ -375,154 +508,135 @@ function initSigCanvas() {
   canvas.addEventListener('pointermove', e => { if (!drawing) return; ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); });
   canvas.addEventListener('pointerup', () => drawing = false);
   canvas.addEventListener('pointerleave', () => drawing = false);
-
-  document.querySelectorAll('[data-field]').forEach(el => {
-    const handler = () => {
-      window._cur.myValues[el.getAttribute('data-field')] = el.type === 'checkbox' ? el.checked : el.value;
-      renderSignPreview();
-    };
-    el.addEventListener('input', handler);
-    el.addEventListener('change', handler);
-  });
 }
 
-async function verifyFingerprint() {
-  const btn = document.getElementById('fpBtn');
-  const msg = document.getElementById('msg');
-  msg.className = 'msg show msg-info';
-  msg.textContent = 'در حال تأیید اثر انگشت...';
-  try {
-    const challenge = new Uint8Array(32);
-    crypto.getRandomValues(challenge);
-    await navigator.credentials.create({
-      publicKey: {
-        challenge,
-        rp: { name: 'قرارداد' },
-        user: { id: new TextEncoder().encode('s-' + Date.now()), name: 'signer', displayName: 'signer' },
-        pubKeyCredParams: [{ type: 'public-key', alg: -7 }],
-        authenticatorSelection: { authenticatorAttachment: 'platform', userVerification: 'required' },
-        timeout: 60000
-      }
-    });
-    window._cur.fpVerified = true;
-    btn.classList.add('verified');
-    btn.textContent = '✅ اثر انگشت تأیید شد';
-    msg.className = 'msg show msg-ok';
-    msg.textContent = 'اثر انگشت با موفقیت تأیید شد.';
-  } catch (e) {
-    msg.className = 'msg show msg-err';
-    msg.textContent = 'تأیید اثر انگشت انجام نشد. اگر دستگاه اثر انگشت ندارد، از دستگاه دیگری استفاده کنید.';
-  }
+function clearSignature() {
+  const canvas = document.getElementById('sigCanvas');
+  canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
 }
 
-async function submitSignature(id, role) {
+/* ─── ثبت نهایی ─── */
+function submitSignature() {
   const msg = document.getElementById('msg');
-  if (!window._cur.fpVerified) {
-    msg.className = 'msg show msg-err';
-    msg.textContent = 'ابتدا اثر انگشت خود را تأیید کنید.';
-    return;
-  }
+  const { data, role } = window._sign;
+
+  // اعتبارسنجی اطلاعات
+  const firstName = document.getElementById('firstName').value.trim();
+  const lastName = document.getElementById('lastName').value.trim();
+  const nationalId = document.getElementById('nationalId').value.trim();
+  const birthDate = document.getElementById('birthDate').value.trim();
+
+  if (!firstName || !lastName) { msg.className='msg show msg-err'; msg.textContent='نام و نام خانوادگی را وارد کنید.'; return; }
+  if (!/^\d{10}$/.test(nationalId)) { msg.className='msg show msg-err'; msg.textContent='کد ملی باید ۱۰ رقم باشد.'; return; }
+  if (!birthDate) { msg.className='msg show msg-err'; msg.textContent='تاریخ تولد را وارد کنید.'; return; }
+  if (!window._sign.facePhoto) { msg.className='msg show msg-err'; msg.textContent='عکس چهره را ثبت کنید.'; return; }
+  if (!window._sign.fpVerified) { msg.className='msg show msg-err'; msg.textContent='اثر انگشت را تأیید کنید.'; return; }
+
   const canvas = document.getElementById('sigCanvas');
   const blank = document.createElement('canvas');
   blank.width = canvas.width; blank.height = canvas.height;
-  if (canvas.toDataURL() === blank.toDataURL()) {
-    msg.className = 'msg show msg-err';
-    msg.textContent = 'امضای خود را روی کادر بکشید.';
-    return;
-  }
-  for (const f of window._cur.myFields) {
-    const v = window._cur.myValues[f.name];
-    if (f.type === 'checkbox' && !v) { msg.className = 'msg show msg-err'; msg.textContent = `لطفاً تیک «${f.label}» را بزنید.`; return; }
-    if (f.type !== 'checkbox' && (!v || !String(v).trim())) { msg.className = 'msg show msg-err'; msg.textContent = `لطفاً «${f.label}» را وارد کنید.`; return; }
-  }
+  if (canvas.toDataURL() === blank.toDataURL()) { msg.className='msg show msg-err'; msg.textContent='امضای خود را بکشید.'; return; }
 
-  const sigData = canvas.toDataURL('image/png');
-  const now = new Date().toISOString();
-  const patch = {};
-  if (role === 'a') { patch.valuesA = window._cur.myValues; patch.sigA = sigData; patch.signedAAt = now; }
-  else { patch.valuesB = window._cur.myValues; patch.sigB = sigData; patch.signedBAt = now; }
+  // ذخیره در داده
+  const partyData = {
+    firstName, lastName, nationalId, birthDate,
+    facePhoto: window._sign.facePhoto,
+    webauthnVerified: true,
+    signature: canvas.toDataURL('image/png'),
+    signedAt: new Date().toISOString()
+  };
 
-  const contract = window._cur.contract;
-  const bothSigned = (contract.signedAAt || (role === 'a' ? now : null)) && (contract.signedBAt || (role === 'b' ? now : null));
-  patch.status = bothSigned ? 'signed' : 'partial';
+  if (role === 'a') data.partyA = partyData;
+  else data.partyB = partyData;
 
-  try {
-    await store.update(id, patch);
-    msg.className = 'msg show msg-ok';
-    msg.textContent = 'امضای شما با موفقیت ثبت شد ✅';
-    setTimeout(() => {
-      location.hash = '#view?id=' + id;
-    }, 1200);
-  } catch (e) {
-    msg.className = 'msg show msg-err';
-    msg.textContent = 'خطا در ثبت: ' + e.message;
-  }
+  const newEncoded = encodeData(data);
+  const base = baseUrl();
+
+  const linkForOther = role === 'a'
+    ? `${base}#sign?role=b&d=${newEncoded}`
+    : `${base}#sign?role=a&d=${newEncoded}`;
+  const linkView = `${base}#view?d=${newEncoded}`;
+
+  msg.className = 'msg show msg-ok';
+  msg.innerHTML = `
+    <strong>✅ امضای شما با موفقیت ثبت شد!</strong>
+    <div style="margin-top:12px;padding:12px;background:#fff;border-radius:8px;">
+      <div style="font-weight:bold;color:#1b5e20;margin-bottom:6px;">🔗 لینک برای ${role === 'a' ? 'طرف دوم' : 'طرف اول'}:</div>
+      <a class="link-url" href="${linkForOther}" target="_blank" style="display:block;padding:8px;background:#f0f4f8;border-radius:6px;word-break:break-all;font-size:0.75rem;font-family:monospace;direction:ltr;text-decoration:none;color:#1a237e;">${linkForOther}</a>
+      <button class="copy-btn" style="margin-top:6px;" onclick="copyText('${linkForOther.replace(/'/g, "\\'")}')">📋 کپی لینک</button>
+
+      <div style="font-weight:bold;color:#1b5e20;margin-top:15px;margin-bottom:6px;">👁️ لینک مشاهده و دانلود PDF:</div>
+      <a class="link-url" href="${linkView}" target="_blank" style="display:block;padding:8px;background:#f0f4f8;border-radius:6px;word-break:break-all;font-size:0.75rem;font-family:monospace;direction:ltr;text-decoration:none;color:#1a237e;">${linkView}</a>
+      <button class="copy-btn" style="margin-top:6px;" onclick="copyText('${linkView.replace(/'/g, "\\'")}')">📋 کپی لینک</button>
+
+      <p style="margin-top:12px;font-size:0.8rem;color:#555;">
+        لینک طرف دیگر را برای او بفرستید تا او هم امضا کند.
+      </p>
+    </div>
+  `;
 }
 
 /* ═══════════════════════════════════════════
    ۶. صفحه مشاهده و PDF
    ═══════════════════════════════════════════ */
-async function renderView(id) {
+function showView(encoded) {
   document.title = 'مشاهده قرارداد';
-  document.getElementById('app').innerHTML = '<div class="container"><div class="card"><p>در حال بارگذاری...</p></div></div>';
-  if (USE_SUPABASE && !sb) await new Promise(r => setTimeout(r, 800));
-
-  let contract = null;
-  try { contract = await store.get(id); } catch (e) {}
-  if (!contract) {
-    document.getElementById('app').innerHTML = '<div class="container"><div class="card"><p style="color:#c62828;">قرارداد یافت نشد.</p></div></div>';
+  const data = decodeData(encoded);
+  if (!data) {
+    document.getElementById('app').innerHTML = '<div class="container"><div class="card"><p style="color:#c62828;">داده نامعتبر.</p></div></div>';
     return;
   }
 
-  const combined = { ...(contract.fixed || {}), ...(contract.valuesA || {}), ...(contract.valuesB || {}) };
-  const stMap = { pending: 'در انتظار امضا', partial: 'نیمه‌امضا', signed: 'امضا شده' };
-  const stCls = { pending: 'st-pending', partial: 'st-partial', signed: 'st-signed' };
-  const html = renderTemplate(contract.template, combined, { sigA: contract.sigA, sigB: contract.sigB });
+  const combined = { ...(data.adminValues || {}) };
+  const html = renderTemplate(data.template, combined, data.partyA, data.partyB);
 
-  const base = location.origin + location.pathname.replace(/index\.html$/, '').replace(/\/$/, '') + '/';
+  const signedA = data.partyA && data.partyA.signedAt;
+  const signedB = data.partyB && data.partyB.signedAt;
+  let status = 'pending', label = 'در انتظار امضا';
+  if (signedA && signedB) { status = 'signed'; label = 'امضا شده'; }
+  else if (signedA || signedB) { status = 'partial'; label = 'نیمه‌امضا'; }
 
   document.getElementById('app').innerHTML = `
     <div class="container">
+      ${topBar()}
       <div class="card">
-        <div class="header"><h1>📄 مشاهده قرارداد</h1></div>
-        <p>وضعیت: <span class="status-badge ${stCls[contract.status] || 'st-pending'}">${stMap[contract.status] || contract.status}</span></p>
-        <p style="font-size:0.85rem;color:#666;">
-          طرف الف: ${contract.signedAAt ? '✅ امضا کرده' : '⏳ امضا نکرده'} &nbsp;|&nbsp;
-          طرف ب: ${contract.signedBAt ? '✅ امضا کرده' : '⏳ امضا نکرده'}
+        <h2>📄 مشاهده قرارداد</h2>
+        <p style="margin-bottom:12px;">
+          وضعیت: <span class="status-badge st-${status}">${label}</span>
+          &nbsp;|&nbsp;
+          طرف اول: ${signedA ? '<span class="check-ok">✅ امضا کرده</span>' : '⏳ امضا نکرده'}
+          &nbsp;|&nbsp;
+          طرف دوم: ${signedB ? '<span class="check-ok">✅ امضا کرده</span>' : '⏳ امضا نکرده'}
         </p>
         <div class="contract-view">${html}</div>
         <div class="btn-row">
-          <button class="btn" onclick="downloadPdf()">📥 دانلود PDF</button>
-          ${contract.status !== 'signed' ? `
-            <button class="btn btn-secondary" onclick="copyLink('${base}#sign?id=${id}&role=a')">📋 کپی لینک الف</button>
-            <button class="btn btn-secondary" onclick="copyLink('${base}#sign?id=${id}&role=b')">📋 کپی لینک ب</button>
-          ` : ''}
+          <button class="btn" onclick="downloadPdf('${encoded}')">📥 دانلود PDF نهایی</button>
         </div>
-        <div class="msg" id="vMsg"></div>
       </div>
     </div>
   `;
-  window._view = { contract, combined };
 }
 
-function copyLink(url) {
-  navigator.clipboard.writeText(url).then(() => {
-    const m = document.getElementById('vMsg');
-    m.className = 'msg show msg-ok';
-    m.textContent = 'لینک کپی شد: ' + url;
-  });
-}
+async function downloadPdf(encoded) {
+  const data = decodeData(encoded);
+  if (!data) return;
+  const combined = { ...(data.adminValues || {}) };
+  const html = renderTemplate(data.template, combined, data.partyA, data.partyB);
 
-async function downloadPdf() {
-  const { contract, combined } = window._view;
   const wrap = document.createElement('div');
-  wrap.style.cssText = 'font-family: Tahoma, sans-serif; direction: rtl; padding: 25px; background: #fff; color: #111; line-height: 2.2; font-size: 13px; width: 210mm;';
+  wrap.style.cssText = 'font-family: Tahoma, sans-serif; direction: rtl; padding: 25px; background: #fff; color: #111; line-height: 2.1; font-size: 12px; width: 210mm;';
   wrap.innerHTML = `
-    <h2 style="text-align:center;color:#1a237e;font-size:15px;margin:0 0 15px;">قرارداد</h2>
-    <div style="white-space:pre-wrap;">${renderTemplate(contract.template, combined, { sigA: contract.sigA, sigB: contract.sigB })}</div>
-    <div style="margin-top:25px;border-top:1px dashed #ccc;padding-top:10px;font-size:10px;color:#666;text-align:center;">
-      تاریخ چاپ: ${new Date().toLocaleString('fa-IR')} — شناسه: ${contract.id}
+    <div style="text-align:center;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid #1a237e;">
+      <div style="font-size:13px;color:#1a237e;font-weight:bold;">قوه قضائیه — سازمان ثبت اسناد و املاک</div>
+      <div style="font-size:10px;color:#666;margin-top:4px;">سامانه امضای الکترونیک قرارداد</div>
+    </div>
+    <div style="white-space:pre-wrap;">${html}</div>
+    <div style="margin-top:25px;padding-top:10px;border-top:1px dashed #ccc;font-size:9px;color:#666;text-align:center;">
+      تاریخ چاپ: ${new Date().toLocaleString('fa-IR')}
+      ${data.partyA && data.partyA.signedAt ? `<br>طرف اول امضا: ${new Date(data.partyA.signedAt).toLocaleString('fa-IR')}` : ''}
+      ${data.partyB && data.partyB.signedAt ? `<br>طرف دوم امضا: ${new Date(data.partyB.signedAt).toLocaleString('fa-IR')}` : ''}
     </div>`;
+
   wrap.style.position = 'fixed';
   wrap.style.left = '-9999px';
   document.body.appendChild(wrap);
@@ -530,13 +644,13 @@ async function downloadPdf() {
   try {
     await html2pdf().from(wrap).set({
       margin: 10,
-      filename: `contract-${contract.id}.pdf`,
+      filename: `contract-${Date.now()}.pdf`,
       image: { type: 'jpeg', quality: 0.95 },
       html2canvas: { scale: 2, useCORS: true },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     }).save();
   } catch (e) {
-    alert('خطا در ساخت PDF: ' + e.message);
+    alert('خطا در PDF: ' + e.message);
   } finally {
     wrap.remove();
   }
@@ -551,16 +665,17 @@ function route() {
   const p = new URLSearchParams(query || '');
 
   if (path === '#sign') {
-    const id = p.get('id'), role = p.get('role');
-    if (!id || !role || !['a', 'b'].includes(role)) {
+    const encoded = p.get('d');
+    const role = p.get('role');
+    if (!encoded || !role || !['a', 'b'].includes(role)) {
       document.getElementById('app').innerHTML = '<div class="container"><div class="card"><p style="color:#c62828;">لینک نامعتبر است.</p></div></div>';
       return;
     }
-    renderSign(id, role);
+    renderSign(encoded, role);
   } else if (path === '#view') {
-    const id = p.get('id');
-    if (!id) { location.hash = ''; return; }
-    renderView(id);
+    const encoded = p.get('d');
+    if (!encoded) { location.hash = ''; return; }
+    showView(encoded);
   } else {
     renderAdmin();
   }
